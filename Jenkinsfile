@@ -17,7 +17,10 @@ pipeline {
         stage('build') {
             agent { docker { image 'python:3.9.2-alpine3.13'}}
             steps {
-                sh 'pip install -r requirements.txt && python ${WORKSPACE}/src/test.py'
+                withEnv(["HOME=${env.WORKSPACE}"]) {
+                    sh 'pip install --user -r requirements.txt'
+                    sh 'python ${WORKSPACE}/src/test.py'
+                }
             }
         }
         stage('Docker Image') {
